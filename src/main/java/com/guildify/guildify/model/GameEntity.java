@@ -21,9 +21,6 @@ public class GameEntity {
     private String gamePublisher;
 
     @OneToMany(mappedBy = "gameEntity")
-    private List<GuildEntity> guildEntityList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "gameEntity")
     private List<GameCharEntity> gameCharEntityList = new ArrayList<>();
 
     @Override
