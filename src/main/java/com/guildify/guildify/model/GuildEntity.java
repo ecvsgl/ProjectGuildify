@@ -22,6 +22,9 @@ public class GuildEntity {
     @OneToOne
     private UserEntity guildLeaderUserEntity;
 
+    @ManyToOne
+    private GameEntity gameEntity;
+
     @OneToMany(mappedBy = "guildEntity")
     private List<GameCharEntity> gameCharEntityList = new ArrayList<>();
 
