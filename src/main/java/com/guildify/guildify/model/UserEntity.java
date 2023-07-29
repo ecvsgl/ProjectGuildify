@@ -13,7 +13,7 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+public class UserEntity extends BaseEntity{
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "userID", nullable = false)
