@@ -34,6 +34,9 @@ public class GameCharService {
                 .gameEntity(gameCharRequest.getGameEntity())
                 .build();
 
+        gameCharEntity.setTimestamp(LocalDateTime.now());
+        gameCharEntity.setCreatedBy("Buraya Giriş yapan kullanıcı değişkeni eklenmelidir.");
+
         gameCharEntity = gameCharRepository.save(gameCharEntity);
 
         // Entity to DTO mapper
@@ -46,7 +49,7 @@ public class GameCharService {
         response.setCharOwner(gameCharEntity.getUserEntity().getUsernameHash());
         response.setCharGameName(gameCharEntity.getGameEntity().getGameName());
         response.setCreatedAt(LocalDateTime.now());
-        response.setCreatedBy("Buraya Giriş yapan kullanıcı değişkeni eklenmelidir.");
+        response.setCreatedBy("X kullanıcı değişkeni eklenmelidir.");
 
         return response;
     }
