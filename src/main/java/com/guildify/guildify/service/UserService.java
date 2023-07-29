@@ -3,22 +3,25 @@ package com.guildify.guildify.service;
 import com.guildify.guildify.model.UserEntity;
 import com.guildify.guildify.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-
-
+    @Autowired
+    private UserRepository userRepository;
 
     public UserEntity getSpecificUserEntity(Integer userId){
-
         return userRepository.findUserByUserId(userId);
+    }
+
+    public List<UserEntity> getAllUserEntities(){
+        return userRepository.findAll();
     }
 
     public void deleteUserEntity(Integer userId){
@@ -40,7 +43,6 @@ public class UserService {
             }
         } catch (Exception e){
             e.printStackTrace();
-            System.out.println("deletemepls");
         }
         return sb.toString();
     }
