@@ -9,5 +9,5 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class BaseEntity {
     private LocalDateTime timestamp;
-
+    private String createdBy;
 }
