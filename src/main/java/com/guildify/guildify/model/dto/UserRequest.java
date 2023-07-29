@@ -8,11 +8,8 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class UserRequest {
-    private String usernameHash;
-    private String passwordHash;
+    private String username;
+    private String password;
     private String displayName;
-    private String displayNameHash;
     private String email;
-    private String accountRank;
-    private LocalDateTime accountCreationDate;
 }

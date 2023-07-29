@@ -21,7 +21,6 @@ public class UserEntity extends BaseEntity{
     private String usernameHash;
     private String passwordHash;
     private String displayName;
-    private String displayNameHash;
     private String email;
     private String accountRank;
     private LocalDateTime accountCreationDate;
@@ -42,7 +41,6 @@ public class UserEntity extends BaseEntity{
                 ", usernameHash='" + usernameHash + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
                 ", displayName='" + displayName + '\'' +
-                ", displayNameHash='" + displayNameHash + '\'' +
                 ", email='" + email + '\'' +
                 ", accountRank='" + accountRank + '\'' +
                 ", accountCreationDate=" + accountCreationDate +
