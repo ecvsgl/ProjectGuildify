@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,Integer> {
-    @Query("select u from UserEntity u where u.userId =: userId")
-    UserEntity findUserByUserId(Integer userId);
+
+    UserEntity findUserEntityByUserId(int userId);
+
+    UserEntity findUserEntityByUsernameHash(String s);
+
+    UserEntity findUserEntityByDisplayName(String s);
 }
