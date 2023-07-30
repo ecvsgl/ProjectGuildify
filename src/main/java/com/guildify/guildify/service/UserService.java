@@ -21,10 +21,10 @@ public class UserService {
     //Create a New User
     public UserResponse createNewUserEntity(UserRequest userRequest){
         //Request to Entity Mapping
-        if(!checkForUsernameAvailability(userRequest.getUsername())){
+        if(checkForUsernameAvailability(userRequest.getUsername())){
             throw new IllegalArgumentException("Please provide another username.");
         }
-        if(!checkForDisplayNameAvailability(userRequest.getDisplayName())){
+        if(checkForDisplayNameAvailability(userRequest.getDisplayName())){
             throw new IllegalArgumentException("Please provide another display name.");
         }
         UserEntity userEntity = UserEntity.builder()
@@ -33,20 +33,23 @@ public class UserService {
                 .displayName(userRequest.getDisplayName())
                 .email(userRequest.getEmail())
                 .accountRank("Noob")
-                .accountCreationDate(LocalDateTime.now())
                 .build();
+        userEntity.setTimestamp(LocalDateTime.now());
+        userEntity.setCreatedBy(userEntity.getDisplayName());
         userEntity = userRepository.save(userEntity);
         //Response Building...
         UserResponse userResponse = UserResponse.builder()
-                .accountCreationDate(userEntity.getAccountCreationDate())
                 .accountRank(userEntity.getAccountRank())
                 .displayName(userEntity.getDisplayName())
+                .email(userEntity.getEmail())
                 .build();
+        userResponse.setCreatedBy(userEntity.getDisplayName());
+        userResponse.setCreatedAt(userEntity.getTimestamp());
         return userResponse;
     }
     //Search for a UserEntity in DB
-    public UserEntity getSpecificUserEntity(Integer userId){
-        return userRepository.findUserByUserId(userId);
+    public UserEntity getSpecificUserEntity(int userId){
+        return userRepository.findUserEntityByUserId(userId);
     }
     //Get all Users in DB
     public List<UserEntity> getAllUserEntities(){
@@ -54,12 +57,13 @@ public class UserService {
     }
     //Delete a User in DB
     public void deleteUserEntity(Integer userId){
-        userRepository.delete(userRepository.findUserByUserId(userId));
+        userRepository.delete(userRepository.findUserEntityByUserId(userId));
     }
     //Update PW of a User, do not allow any more updates.
     public void updateUserEntityPassword(Integer userId, String newPassword){
-        UserEntity userEntity = userRepository.findUserByUserId(userId);
+        UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
         userEntity.setPasswordHash(stringHashingMethod(newPassword));
+        userRepository.save(userEntity);
     }
     public boolean checkForUsernameAvailability(String username){
         UserEntity userEntity = userRepository.findUserEntityByUsernameHash(stringHashingMethod(username));

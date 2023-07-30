@@ -23,7 +23,6 @@ public class UserEntity extends BaseEntity{
     private String displayName;
     private String email;
     private String accountRank;
-    private LocalDateTime accountCreationDate;
 
     @OneToMany(mappedBy = "userEntity")
     private List<PostEntity> postEntityList = new ArrayList<>();
@@ -43,7 +42,6 @@ public class UserEntity extends BaseEntity{
                 ", displayName='" + displayName + '\'' +
                 ", email='" + email + '\'' +
                 ", accountRank='" + accountRank + '\'' +
-                ", accountCreationDate=" + accountCreationDate +
                 '}';
     }
 }

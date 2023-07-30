@@ -13,6 +13,5 @@ public class UserResponse extends MainResponse{
     private String displayName;
     private String email;
     private String accountRank;
-    private LocalDateTime accountCreationDate;
     private List<GameCharResponse> gameCharResponseList;
 }

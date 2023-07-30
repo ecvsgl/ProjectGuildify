@@ -22,23 +22,22 @@ public class UserController {
     public UserResponse createNewUserEntity(@RequestBody UserRequest userRequest){
         return userService.createNewUserEntity(userRequest);
     }
-    @GetMapping("/userSearch")
-    public UserEntity getSpecificUserEntity(@RequestBody Integer userId){
+    @GetMapping("/userSearch/{userId}")
+    public UserEntity getSpecificUserEntity(@PathVariable int userId){
         return userService.getSpecificUserEntity(userId);
     }
     @GetMapping("/userlist")
     public List<UserEntity> getAllUserEntities(){
         return userService.getAllUserEntities();
     }
-    @DeleteMapping
-    public void deleteUserEntity(@RequestBody Integer userId){
+    @DeleteMapping("/rmuser/{userId}")
+    public void deleteUserEntity(@PathVariable Integer userId){
         userService.deleteUserEntity(userId);
     }
-    @PutMapping("/userpwchange")
-    public String updateUserEntityPassword(@RequestBody Integer userId,
+    @PutMapping("/userpwchange/{userId}")
+    public String updateUserEntityPassword(@PathVariable Integer userId,
                                            @RequestBody String newPassword){
         userService.updateUserEntityPassword(userId,newPassword);
         return "Password Changed Successfully.";
     }
-
 }
