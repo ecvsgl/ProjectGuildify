@@ -19,7 +19,6 @@ public class PostEntity extends BaseEntity {
     @Column(name = "postID", nullable = false)
     private int postId;
     private String postContent;
-    private LocalDateTime postTimestamp;
 
     @ManyToOne
     private UserEntity userEntity;
@@ -32,7 +31,6 @@ public class PostEntity extends BaseEntity {
         return "PostEntity{" +
                 "postId=" + postId +
                 ", postContent='" + postContent + '\'' +
-                ", postDate=" + postTimestamp +
                 '}';
     }
 }
