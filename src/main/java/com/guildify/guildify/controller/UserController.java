@@ -31,8 +31,9 @@ public class UserController {
         return userService.getAllUserEntities();
     }
     @DeleteMapping("/rmuser/{userId}")
-    public void deleteUserEntity(@PathVariable Integer userId){
+    public String deleteUserEntity(@PathVariable Integer userId){
         userService.deleteUserEntity(userId);
+        return "User Deleted Successfully.";
     }
     @PutMapping("/userpwchange/{userId}")
     public String updateUserEntityPassword(@PathVariable Integer userId,
