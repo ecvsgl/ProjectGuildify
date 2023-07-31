@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class MainResponse {
-    private LocalDateTime  createdAt;
+    private LocalDateTime createdAt;
     private String createdBy;
 }
