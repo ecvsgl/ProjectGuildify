@@ -1,11 +1,10 @@
 package com.guildify.guildify.initialize;
 
 import com.guildify.guildify.model.CalendarEventEntity;
+import com.guildify.guildify.model.PostCommentsEntity;
 import com.guildify.guildify.model.PostEntity;
 import com.guildify.guildify.model.UserEntity;
-import com.guildify.guildify.repository.CalendarEventRepository;
-import com.guildify.guildify.repository.PostRepository;
-import com.guildify.guildify.repository.UserRepository;
+import com.guildify.guildify.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,6 +21,10 @@ public class EventInitializerTest implements CommandLineRunner {
     private final CalendarEventRepository calendarEventRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final PostCommentsRepository postCommentsRepository;
+    private final GuildRepository guildRepository;
+    private final GameCharRepository gameCharRepository;
+    private final GameRepository gameRepository;
 
     @Override
     @Transactional
@@ -113,6 +116,36 @@ public class EventInitializerTest implements CommandLineRunner {
 
             // Save the PostEntity instances to the repository
             postRepository.saveAll(List.of(postEntity1,postEntity2,postEntity3));
+
+            // Example 1
+            PostCommentsEntity postCommentsEntity1 = PostCommentsEntity.builder()
+                    .commentContent("Great post!")
+                    .userEntity(userRepository.findUserEntityByUserId(1))
+                    .postEntity(postRepository.findPostEntityByPostId(1))
+                    .build();
+            postCommentsEntity1.setTimestamp(LocalDateTime.now());
+            postCommentsEntity1.setCreatedBy(postCommentsEntity1.getUserEntity().getDisplayName());
+
+            // Example 2
+            PostCommentsEntity postCommentsEntity2 = PostCommentsEntity.builder()
+                    .commentContent("Thanks for sharing.")
+                    .userEntity(userRepository.findUserEntityByUserId(2))
+                    .postEntity(postRepository.findPostEntityByPostId(2))
+                    .build();
+            postCommentsEntity2.setTimestamp(LocalDateTime.now());
+            postCommentsEntity2.setCreatedBy(postCommentsEntity2.getUserEntity().getDisplayName());
+
+            // Example 3
+            PostCommentsEntity postCommentsEntity3 = PostCommentsEntity.builder()
+                    .commentContent("Looking forward to it!")
+                    .userEntity(userRepository.findUserEntityByUserId(3))
+                    .postEntity(postRepository.findPostEntityByPostId(3))
+                    .build();
+            postCommentsEntity3.setTimestamp(LocalDateTime.now());
+            postCommentsEntity3.setCreatedBy(postCommentsEntity3.getUserEntity().getDisplayName());
+
+            // Save the PostCommentsEntity instances to the repository
+            postCommentsRepository.saveAll(List.of(postCommentsEntity1,postCommentsEntity2,postCommentsEntity3));
         }
     }
 }
