@@ -39,6 +39,21 @@ public class PostService {
         postResponse.setCreatedBy(postEntity.getUserEntity().getDisplayName());
         return postResponse;
     }
+    public List<PostResponse> getAllPosts(){
+        List<PostEntity> allPosts = postRepository.findAll();
+        List <PostResponse> allPostsToPostResponse = new ArrayList<>();
+        for(PostEntity postEntity: allPosts){
+            PostResponse postResponse = PostResponse.builder()
+                    .postContent(postEntity.getPostContent())
+                    .postTimestamp(postEntity.getTimestamp())
+                    .postOwnerName(postEntity.getUserEntity().getDisplayName())
+                    .build();
+            postResponse.setCreatedBy(postResponse.getPostOwnerName());
+            postResponse.setCreatedAt(postResponse.getPostTimestamp());
+            allPostsToPostResponse.add(postResponse);
+        }
+        return allPostsToPostResponse;
+    }
     public List<PostResponse> getAllPostsOfAUserEntity(int userId){
         List<PostEntity> allPostsByUser = postRepository.findPostEntitiesByUserEntity_UserId(userId);
         List <PostResponse> allPostsToPostResponse = new ArrayList<>();
@@ -55,7 +70,7 @@ public class PostService {
         }
         return allPostsToPostResponse;
     }
-    public PostResponse getPostEntityByPostId(int postId){
+    public PostResponse getPostByPostId(int postId){
         PostEntity postEntity = postRepository.findPostEntitiesByPostId(postId);
         PostResponse postResponse = PostResponse.builder()
                 .postContent(postEntity.getPostContent())
