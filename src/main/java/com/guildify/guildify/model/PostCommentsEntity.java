@@ -16,9 +16,7 @@ public class PostCommentsEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentID", nullable = false)
     private int commentId;
-    private int commentQueueNumber;
     private String commentContent;
-    private LocalDateTime commentTimestamp;
 
     @ManyToOne
     private UserEntity userEntity;
@@ -30,9 +28,7 @@ public class PostCommentsEntity extends BaseEntity{
     public String toString() {
         return "PostCommentsEntity{" +
                 "commentId=" + commentId +
-                ", commentQueueNumber=" + commentQueueNumber +
                 ", commentContent='" + commentContent + '\'' +
-                ", commentTimestamp=" + commentTimestamp +
                 '}';
     }
 }
