@@ -31,11 +31,12 @@ public class PostService {
         postEntity = postRepository.save(postEntity);
         //Response Building ...
         PostResponse postResponse = PostResponse.builder()
+                .postId(postEntity.getPostId())
                 .postContent(postEntity.getPostContent())
                 .postTimestamp((postEntity.getTimestamp()))
                 .postOwnerName(postEntity.getUserEntity().getDisplayName())
                 .build();
-        postResponse.setCreatedAt(postEntity.getTimestamp());
+        postResponse.setCreatedAt(LocalDateTime.now());
         postResponse.setCreatedBy(postEntity.getUserEntity().getDisplayName());
         return postResponse;
     }
@@ -44,12 +45,13 @@ public class PostService {
         List <PostResponse> allPostsToPostResponse = new ArrayList<>();
         for(PostEntity postEntity: allPosts){
             PostResponse postResponse = PostResponse.builder()
+                    .postId(postEntity.getPostId())
                     .postContent(postEntity.getPostContent())
                     .postTimestamp(postEntity.getTimestamp())
                     .postOwnerName(postEntity.getUserEntity().getDisplayName())
                     .build();
             postResponse.setCreatedBy(postResponse.getPostOwnerName());
-            postResponse.setCreatedAt(postResponse.getPostTimestamp());
+            postResponse.setCreatedAt(LocalDateTime.now());
             allPostsToPostResponse.add(postResponse);
         }
         return allPostsToPostResponse;
@@ -59,12 +61,13 @@ public class PostService {
         List <PostResponse> allPostsToPostResponse = new ArrayList<>();
         for(PostEntity postEntity: allPostsByUser){
             PostResponse postResponse = PostResponse.builder()
+                    .postId(postEntity.getPostId())
                     .postContent(postEntity.getPostContent())
                     .postTimestamp(postEntity.getTimestamp())
                     .postOwnerName(postEntity.getUserEntity().getDisplayName())
                     .build();
             postResponse.setCreatedBy(postResponse.getPostOwnerName());
-            postResponse.setCreatedAt(postResponse.getPostTimestamp());
+            postResponse.setCreatedAt(LocalDateTime.now());
 
             allPostsToPostResponse.add(postResponse);
         }
@@ -73,10 +76,13 @@ public class PostService {
     public PostResponse getPostByPostId(int postId){
         PostEntity postEntity = postRepository.findPostEntitiesByPostId(postId);
         PostResponse postResponse = PostResponse.builder()
+                .postId(postEntity.getPostId())
                 .postContent(postEntity.getPostContent())
                 .postTimestamp(postEntity.getTimestamp())
                 .postOwnerName(postEntity.getUserEntity().getDisplayName())
                 .build();
+        postResponse.setCreatedAt(LocalDateTime.now());
+        postResponse.setCreatedBy(postResponse.getPostOwnerName());
         return postResponse;
     }
     public void deletePostEntity(int postId){
