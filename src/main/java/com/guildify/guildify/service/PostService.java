@@ -74,7 +74,7 @@ public class PostService {
         return allPostsToPostResponse;
     }
     public PostResponse getPostByPostId(int postId){
-        PostEntity postEntity = postRepository.findPostEntitiesByPostId(postId);
+        PostEntity postEntity = postRepository.findPostEntityByPostId(postId);
         PostResponse postResponse = PostResponse.builder()
                 .postId(postEntity.getPostId())
                 .postContent(postEntity.getPostContent())
@@ -86,6 +86,6 @@ public class PostService {
         return postResponse;
     }
     public void deletePostEntity(int postId){
-        postRepository.delete(postRepository.findPostEntitiesByPostId(postId));
+        postRepository.delete(postRepository.findPostEntityByPostId(postId));
     }
 }
