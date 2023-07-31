@@ -31,40 +31,61 @@ public class PostService {
         postEntity = postRepository.save(postEntity);
         //Response Building ...
         PostResponse postResponse = PostResponse.builder()
+                .postId(postEntity.getPostId())
                 .postContent(postEntity.getPostContent())
                 .postTimestamp((postEntity.getTimestamp()))
                 .postOwnerName(postEntity.getUserEntity().getDisplayName())
                 .build();
-        postResponse.setCreatedAt(postEntity.getTimestamp());
+        postResponse.setCreatedAt(LocalDateTime.now());
         postResponse.setCreatedBy(postEntity.getUserEntity().getDisplayName());
         return postResponse;
+    }
+    public List<PostResponse> getAllPosts(){
+        List<PostEntity> allPosts = postRepository.findAll();
+        List <PostResponse> allPostsToPostResponse = new ArrayList<>();
+        for(PostEntity postEntity: allPosts){
+            PostResponse postResponse = PostResponse.builder()
+                    .postId(postEntity.getPostId())
+                    .postContent(postEntity.getPostContent())
+                    .postTimestamp(postEntity.getTimestamp())
+                    .postOwnerName(postEntity.getUserEntity().getDisplayName())
+                    .build();
+            postResponse.setCreatedBy(postResponse.getPostOwnerName());
+            postResponse.setCreatedAt(LocalDateTime.now());
+            allPostsToPostResponse.add(postResponse);
+        }
+        return allPostsToPostResponse;
     }
     public List<PostResponse> getAllPostsOfAUserEntity(int userId){
         List<PostEntity> allPostsByUser = postRepository.findPostEntitiesByUserEntity_UserId(userId);
         List <PostResponse> allPostsToPostResponse = new ArrayList<>();
         for(PostEntity postEntity: allPostsByUser){
             PostResponse postResponse = PostResponse.builder()
+                    .postId(postEntity.getPostId())
                     .postContent(postEntity.getPostContent())
                     .postTimestamp(postEntity.getTimestamp())
                     .postOwnerName(postEntity.getUserEntity().getDisplayName())
                     .build();
             postResponse.setCreatedBy(postResponse.getPostOwnerName());
-            postResponse.setCreatedAt(postResponse.getPostTimestamp());
+            postResponse.setCreatedAt(LocalDateTime.now());
 
             allPostsToPostResponse.add(postResponse);
         }
         return allPostsToPostResponse;
     }
-    public PostResponse getPostEntityByPostId(int postId){
-        PostEntity postEntity = postRepository.findPostEntitiesByPostId(postId);
+    public PostResponse getPostByPostId(int postId){
+        PostEntity postEntity = postRepository.findPostEntityByPostId(postId);
         PostResponse postResponse = PostResponse.builder()
+                .postId(postEntity.getPostId())
                 .postContent(postEntity.getPostContent())
                 .postTimestamp(postEntity.getTimestamp())
                 .postOwnerName(postEntity.getUserEntity().getDisplayName())
                 .build();
+        postResponse.setCreatedAt(LocalDateTime.now());
+        postResponse.setCreatedBy(postResponse.getPostOwnerName());
         return postResponse;
     }
     public void deletePostEntity(int postId){
-        postRepository.delete(postRepository.findPostEntitiesByPostId(postId));
+        postRepository.delete(postRepository.findPostEntityByPostId(postId));
     }
 }

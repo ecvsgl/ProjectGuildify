@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity,Integer> {
     List<PostEntity> findPostEntitiesByUserEntity_UserId(int userId);
-    PostEntity findPostEntitiesByPostId(int postId);
+    PostEntity findPostEntityByPostId(int postId);
 }

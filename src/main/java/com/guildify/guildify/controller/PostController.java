@@ -18,13 +18,17 @@ public class PostController {
     public PostResponse createNewPostEntity(@RequestBody PostRequest postRequest){
         return postService.createNewPostEntity(postRequest);
     }
+    @GetMapping("/posts")
+    public List<PostResponse> getAllPosts(){
+        return postService.getAllPosts();
+    }
     @GetMapping("/posts/{userId}")
     public List<PostResponse> getAllPostsOfAUserEntity(@PathVariable int userId){
         return postService.getAllPostsOfAUserEntity(userId);
     }
     @GetMapping("/post/{postId}")
-    public PostResponse getPostEntityByPostId(@PathVariable int postId){
-        return postService.getPostEntityByPostId(postId);
+    public PostResponse getPostByPostId(@PathVariable int postId){
+        return postService.getPostByPostId(postId);
     }
     @DeleteMapping("/post/{postId}")
     public String deletePostEntity(@PathVariable int postId){
