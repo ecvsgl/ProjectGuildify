@@ -1,5 +1,6 @@
 package com.guildify.guildify.controller;
 
+import com.guildify.guildify.model.GameCharEntity;
 import com.guildify.guildify.model.GameEntity;
 import com.guildify.guildify.model.dto.GameRequest;
 import com.guildify.guildify.model.dto.GameResponse;
@@ -23,19 +24,30 @@ public class GameController {
         log.info("Games has been searched");
         return gameService.getAllGames();
     }
+
+    @GetMapping("/games/{gameId}")
+    public GameEntity getGamesById(@PathVariable int gameId) {
+        return gameService.getGamesById(gameId);
+    }
+
+    @GetMapping("/games/characters/{gameId}")
+    public List<GameCharEntity> getCharsByGameId(@PathVariable int gameId) {
+        return gameService.getCharsByGameId(gameId);
+    }
+
     @PostMapping("/games")
     public ResponseEntity<GameResponse> addNewGame(@RequestBody GameRequest game) {
         return ResponseEntity.ok().body(gameService.addNewGame(game));
     }
 
     @PutMapping("/games")
-    public GameEntity updateGame(@RequestBody GameEntity game) {
-        return gameService.updateGame(game);
+    public GameEntity updateExistingGame(@RequestBody GameEntity game) {
+        return gameService.updateExistingGame(game);
     }
 
-    @DeleteMapping("/games")
-    public void deleteExistingGame(@RequestBody GameEntity game) {
-        gameService.deleteExistingGame(game);
+    @DeleteMapping("/games/{gameId}")
+    public void deleteExistingGame(@PathVariable int gameId) {
+        gameService.deleteExistingGame(gameId);
     }
 
 }

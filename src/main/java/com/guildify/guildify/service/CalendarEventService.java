@@ -16,4 +16,21 @@ public class CalendarEventService {
     public List<CalendarEventEntity> getAllCalenderEvents() {
         return calendarEventRepository.findAll();
     }
+
+    public CalendarEventEntity addNewEvent(CalendarEventEntity event) {
+        return calendarEventRepository.save(event);
+    }
+
+    public CalendarEventEntity updateEvent(CalendarEventEntity event) {
+        return calendarEventRepository.save(event);
+    }
+
+    public void deleteExistingEvent(CalendarEventEntity event) {
+        calendarEventRepository.delete(event);
+    }
+
+    public CalendarEventEntity getCalenderEventById(int eventId) {
+
+        return calendarEventRepository.findCalendarEventEntityByEventId(eventId);
+    }
 }
