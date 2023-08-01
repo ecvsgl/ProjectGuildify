@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CalendarEventRepository extends JpaRepository<CalendarEventEntity, Integer> {
+
+    CalendarEventEntity findCalendarEventEntityByEventId(int eventId);
 }
