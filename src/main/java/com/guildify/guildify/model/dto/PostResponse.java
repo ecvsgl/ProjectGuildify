@@ -10,6 +10,5 @@ import java.time.LocalDateTime;
 public class PostResponse extends MainResponse{
     private int postId;
     private String postContent;
-    private LocalDateTime postTimestamp;
-    private String postOwnerName;
+    private String postOwnerDisplayName;
 }

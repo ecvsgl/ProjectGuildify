@@ -17,6 +17,7 @@ public class GameEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gameID", nullable = false)
     private int gameId;
+    @Column(nullable = false, unique = true)
     private String gameName;
     private String gamePublisher;
 

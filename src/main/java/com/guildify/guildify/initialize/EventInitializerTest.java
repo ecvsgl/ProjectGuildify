@@ -45,8 +45,8 @@ public class EventInitializerTest implements CommandLineRunner {
 
             //UserEntity Persistance...
             UserEntity user1 = new UserEntity();
-            user1.setUsernameHash("hash1");
-            user1.setPasswordHash("password1");
+            user1.setUsername("hash1");
+            user1.setPassword("password1");
             user1.setDisplayName("John Doe");
             user1.setEmail("john.doe@example.com");
             user1.setAccountRank("Standard");
@@ -54,8 +54,8 @@ public class EventInitializerTest implements CommandLineRunner {
             user1.setCreatedBy(user1.getDisplayName());
 
             UserEntity user2 = new UserEntity();
-            user2.setUsernameHash("hash2");
-            user2.setPasswordHash("password2");
+            user2.setUsername("hash2");
+            user2.setPassword("password2");
             user2.setDisplayName("Jane Smith");
             user2.setEmail("jane.smith@example.com");
             user2.setAccountRank("Premium");
@@ -63,8 +63,8 @@ public class EventInitializerTest implements CommandLineRunner {
             user2.setCreatedBy(user2.getDisplayName());
 
             UserEntity user3 = new UserEntity();
-            user3.setUsernameHash("hash3");
-            user3.setPasswordHash("password3");
+            user3.setUsername("hash3");
+            user3.setPassword("password3");
             user3.setDisplayName("Mike Johnson");
             user3.setEmail("mike.johnson@example.com");
             user3.setAccountRank("Admin");
@@ -72,8 +72,8 @@ public class EventInitializerTest implements CommandLineRunner {
             user3.setCreatedBy(user3.getDisplayName());
 
             UserEntity user4 = new UserEntity();
-            user4.setUsernameHash("hash4");
-            user4.setPasswordHash("password4");
+            user4.setUsername("hash4");
+            user4.setPassword("password4");
             user4.setDisplayName("Anna Lee");
             user4.setEmail("anna.lee@example.com");
             user4.setAccountRank("Standard");
@@ -81,8 +81,8 @@ public class EventInitializerTest implements CommandLineRunner {
             user4.setCreatedBy(user4.getDisplayName());
 
             UserEntity user5 = new UserEntity();
-            user5.setUsernameHash("hash5");
-            user5.setPasswordHash("password5");
+            user5.setUsername("hash5");
+            user5.setPassword("password5");
             user5.setDisplayName("David Brown");
             user5.setEmail("david.brown@example.com");
             user5.setAccountRank("Premium");

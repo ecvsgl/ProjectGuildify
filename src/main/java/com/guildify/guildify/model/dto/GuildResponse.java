@@ -14,8 +14,8 @@ public class GuildResponse extends MainResponse{
 
     private int guildId;
     private String guildName;
-    private UserEntity guildLeaderUserEntity;
-    private GameEntity gameEntity;
-    private List<GameCharEntity> gameCharEntityList;
+    private String guildLeaderUserDisplayName;
+    private String gameName;
+    private List<GameCharResponse> gameCharResponseList;
 
 }

@@ -10,6 +10,6 @@ import lombok.Data;
 public class GameCharRequest {
     private String charName;
     private String charLevel;
-    private UserEntity userEntity;
-    private GameEntity gameEntity;
+    private String userDisplayName;
+    private String gameName; ;
 }

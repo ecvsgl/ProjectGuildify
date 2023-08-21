@@ -16,8 +16,8 @@ public class PostCommentsEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "commentID", nullable = false)
     private int commentId;
+    @Column(nullable = false)
     private String commentContent;
-
     @ManyToOne
     private UserEntity userEntity;
 

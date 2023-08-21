@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 public class PostCommentResponse extends MainResponse{
+    private int commentId;
     private String commentContent;
     private String senderDisplayName;
-    private LocalDateTime timestamp;
     private int postId;
 }

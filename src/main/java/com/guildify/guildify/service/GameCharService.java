@@ -49,7 +49,7 @@ public class GameCharService {
                 .charLevel(gameCharEntity.getCharLevel())
                 .build();
 
-        response.setCharOwner(gameCharEntity.getUserEntity().getUsernameHash());
+        response.setCharOwner(gameCharEntity.getUserEntity().getUsername());
         response.setCharGameName(gameCharEntity.getGameEntity().getGameName());
         response.setCreatedAt(LocalDateTime.now());
         response.setCreatedBy("X kullanıcı değişkeni eklenmelidir.");

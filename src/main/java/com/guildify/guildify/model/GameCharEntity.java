@@ -14,6 +14,7 @@ public class GameCharEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "charID", nullable = false)
     private int charId;
+    @Column(nullable = false)
     private String charName;
     private String charLevel;
 

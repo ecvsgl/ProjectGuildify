@@ -4,9 +4,8 @@ import com.guildify.guildify.model.UserEntity;
 import com.guildify.guildify.model.dto.UserRequest;
 import com.guildify.guildify.model.dto.UserResponse;
 import com.guildify.guildify.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -18,35 +17,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    //Create a New User
-    public UserResponse createNewUserEntity(UserRequest userRequest){
-        //Request to Entity Mapping
-        if(checkForUsernameAvailability(userRequest.getUsername())){
-            throw new IllegalArgumentException("Please provide another username.");
-        }
-        if(checkForDisplayNameAvailability(userRequest.getDisplayName())){
-            throw new IllegalArgumentException("Please provide another display name.");
-        }
-        UserEntity userEntity = UserEntity.builder()
-                .usernameHash(stringHashingMethod(userRequest.getUsername()))
-                .passwordHash(stringHashingMethod(userRequest.getPassword()))
-                .displayName(userRequest.getDisplayName())
-                .email(userRequest.getEmail())
-                .accountRank("Noob")
-                .build();
-        userEntity.setTimestamp(LocalDateTime.now());
-        userEntity.setCreatedBy(userEntity.getDisplayName());
-        userEntity = userRepository.save(userEntity);
-        //Response Building...
-        UserResponse userResponse = UserResponse.builder()
-                .accountRank(userEntity.getAccountRank())
-                .displayName(userEntity.getDisplayName())
-                .email(userEntity.getEmail())
-                .build();
-        userResponse.setCreatedBy(userEntity.getDisplayName());
-        userResponse.setCreatedAt(userEntity.getTimestamp());
-        return userResponse;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     //Search for a UserEntity in DB
     public UserEntity getSpecificUserEntity(int userId){
         return userRepository.findUserEntityByUserId(userId);
@@ -62,28 +34,8 @@ public class UserService {
     //Update PW of a User, do not allow any more updates.
     public void updateUserEntityPassword(Integer userId, String newPassword){
         UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
-        userEntity.setPasswordHash(stringHashingMethod(newPassword));
+        userEntity.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(userEntity);
     }
-    public boolean checkForUsernameAvailability(String username){
-        UserEntity userEntity = userRepository.findUserEntityByUsernameHash(stringHashingMethod(username));
-        return userEntity != null;
-    }
-    public boolean checkForDisplayNameAvailability(String displayName){
-        UserEntity userEntity = userRepository.findUserEntityByDisplayName(displayName);
-        return userEntity != null;
-    }
-    public String stringHashingMethod(String inputString){
-        StringBuilder sb = new StringBuilder();
-        try{
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-            byte[] hashes = messageDigest.digest(inputString.getBytes());
-            for (byte a: hashes){
-                sb.append(String.format("%02X",a));
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return sb.toString();
-    }
+
 }

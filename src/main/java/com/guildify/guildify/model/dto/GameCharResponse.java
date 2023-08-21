@@ -13,4 +13,5 @@ public class GameCharResponse extends MainResponse{
     private String charLevel;
     private String charOwner;
     private String charGameName;
+    private String charGuildName;
 }
