@@ -18,6 +18,7 @@ public class GuildEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guildID", nullable = false)
     private int guildId;
+    @Column(nullable = false, unique = true)
     private String guildName;
 
     @OneToOne

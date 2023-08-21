@@ -18,10 +18,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @PostMapping("/newuser")
-    public UserResponse createNewUserEntity(@RequestBody UserRequest userRequest){
-        return userService.createNewUserEntity(userRequest);
-    }
     @GetMapping("/userSearch/{userId}")
     public UserEntity getSpecificUserEntity(@PathVariable int userId){
         return userService.getSpecificUserEntity(userId);

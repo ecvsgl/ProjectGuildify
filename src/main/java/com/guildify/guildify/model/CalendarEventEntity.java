@@ -16,6 +16,7 @@ public class CalendarEventEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "eventID", nullable = false)
     private int eventId;
+    @Column(nullable = false)
     private String eventName;
     private LocalDateTime eventTime;
 
