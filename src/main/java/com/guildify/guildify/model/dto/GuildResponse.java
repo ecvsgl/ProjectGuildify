@@ -11,11 +11,9 @@ import java.util.List;
 @Data
 @Builder
 public class GuildResponse extends MainResponse{
-
     private int guildId;
     private String guildName;
     private String guildLeaderUserDisplayName;
     private String gameName;
     private List<GameCharResponse> gameCharResponseList;
-
 }
