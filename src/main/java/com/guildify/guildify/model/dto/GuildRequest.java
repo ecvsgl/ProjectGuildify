@@ -10,9 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class GuildRequest {
-
     private String guildName;
-    private UserEntity guildLeaderUserEntity;
-    private GameEntity gameEntity;
-    private List<GameCharEntity> gameCharEntityList;
+    private String guildLeaderUserDisplayName;
+    private String gameName;
 }

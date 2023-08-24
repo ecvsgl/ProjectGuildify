@@ -11,5 +11,5 @@ public class GameCharRequest {
     private String charName;
     private String charLevel;
     private String userDisplayName;
-    private String gameName; ;
+    private String gameName;
 }

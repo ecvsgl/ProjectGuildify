@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GuildifyUserDetailsService implements UserDetailsService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
 

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +66,7 @@ public class AuthenticationService {
             UserEntity userEntity = userRepository.findUserEntityByUsername(loginRequest.getUsername());
             LoginResponse loginResponse = new LoginResponse(userEntityToResponseMapper(userEntity),token);
             return loginResponse;
-        } catch (Exception e){
+        } catch (AuthenticationException e){
             return new LoginResponse(null,"");
         }
     }

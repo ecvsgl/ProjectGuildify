@@ -38,7 +38,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "userEntity")
     private List<GameCharEntity> gameCharEntityList = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
+    //ManyToMany assoc entity table creation.
     @JoinTable(
             name="user_role_junction",
             joinColumns = {@JoinColumn(name="user_id")},
@@ -50,8 +51,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
     public String toString() {
         return "UserEntity{" +
                 "userId=" + userId +
-                ", usernameHash='" + username + '\'' +
-                ", passwordHash='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", email='" + email + '\'' +
                 ", accountRank='" + accountRank + '\'' +
