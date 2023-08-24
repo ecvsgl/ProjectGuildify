@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,6 +28,14 @@ public class RestErrorHandler {
         GuildfyApiExceptionTemplate template = getGuildfyApiExceptionTemplate(e.getMessage(), HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(template, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<GuildfyApiExceptionTemplate> handleException(UsernameNotFoundException e) {
+        GuildfyApiExceptionTemplate template = getGuildfyApiExceptionTemplate(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(template, HttpStatus.NOT_FOUND);
+    }
+
 
     private GuildfyApiExceptionTemplate getGuildfyApiExceptionTemplate(String message, HttpStatus status) {
         GuildfyApiExceptionTemplate template = new GuildfyApiExceptionTemplate();
