@@ -39,7 +39,13 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Please provide another displayname.");
         }
         Set<Role> userAuthorities = new HashSet<>();
-        userAuthorities.add(roleRepository.findRoleByAuthority("STANDARD_USER"));
+        Role standardRole = roleRepository.findRoleByAuthority("STANDARD_USER");
+        if(standardRole==null){
+            standardRole = new Role();
+            standardRole.setAuthority("STANDARD_USER");
+            standardRole = roleRepository.save(standardRole);
+        }
+        userAuthorities.add(standardRole);
         //Request to Entity mapping.
         UserEntity userEntity = UserEntity.builder()
                 .username(userRequest.getUsername())
