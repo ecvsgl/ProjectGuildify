@@ -1,13 +1,13 @@
 package com.guildify.guildify.controller;
 
-import com.guildify.guildify.model.GameCharEntity;
-import com.guildify.guildify.model.GuildEntity;
+
+import com.guildify.guildify.model.dto.GameCharResponse;
 import com.guildify.guildify.model.dto.GuildRequest;
 import com.guildify.guildify.model.dto.GuildResponse;
 import com.guildify.guildify.service.GuildService;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,42 +19,52 @@ public class GuildController {
     @Autowired
     private GuildService guildService;
 
-    @PostMapping("/guilds")
-    public ResponseEntity<GuildResponse> addNewGuild(@RequestBody GuildRequest guild) {
-        return ResponseEntity.ok().body(guildService.addNewGuild(guild));
+    @PostMapping("/user/newguild")
+    public GuildResponse addNewGuild(@RequestHeader("Authorization") String bearerToken,
+                                                     @RequestBody GuildRequest guild) {
+        return guildService.addNewGuild(StaticMethods.getJwtFromRequestHeader(bearerToken), guild);
     }
 
-    @GetMapping("/guilds")
-    public List<GuildEntity> getAllGuilds() {
+    @GetMapping("/user/guilds")
+    public List<GuildResponse> getAllGuilds(@RequestHeader("Authorization") String bearerToken) {
         log.info("Guilds has been searched");
-        return guildService.getAllGuilds();
+        return guildService.getAllGuilds(StaticMethods.getJwtFromRequestHeader(bearerToken));
     }
 
-    @GetMapping("/guilds/{guildId}")
-    public GuildEntity getGuildById(@PathVariable int guildId) {
-        return guildService.getGuildById(guildId);
+    @GetMapping("/user/guilds/{guildId}")
+    public GuildResponse getGuildById(@RequestHeader("Authorization") String bearerToken,
+                                    @PathVariable int guildId) {
+        return guildService.getGuildById(StaticMethods.getJwtFromRequestHeader(bearerToken),guildId);
     }
 
-    @GetMapping("/guilds/sameguild/{guildId}")
-    public List<GameCharEntity> getSameGuildGameChars(int guildId) {
-        return guildService.getSameGuildGameChars(guildId);
+    @GetMapping("/user/guilds/sameguild/{guildId}")
+    public List<GameCharResponse> getSameGuildGameChars(@RequestHeader("Authorization") String bearerToken,
+                                                        @PathVariable int guildId) {
+        return guildService.getSameGuildGameChars(StaticMethods.getJwtFromRequestHeader(bearerToken),guildId);
     }
 
-    @PutMapping("/guilds/{guildId}")
-    public GuildEntity updateGuild(@PathVariable int guildId) {
-        return guildService.updateGuild(guildId);
+    @PutMapping("/admin/guild/{guildId}")
+    public GuildResponse updateGuild(@RequestHeader("Authorization") String bearerToken,
+                                     @RequestBody GuildRequest guildRequest,
+                                     @PathVariable int guildId) {
+        return guildService.updateGuild(StaticMethods.getJwtFromRequestHeader(bearerToken),guildRequest, guildId);
     }
 
     //Deleting all guilds
-    @DeleteMapping("/guilds")
-    public void deleteAllGuilds(@RequestBody GuildEntity guild) {
-        guildService.deleteAllGuilds(guild);
+    @DeleteMapping("/admin/removeguild/all")
+    public String deleteAllGuilds() {
+        return guildService.deleteAllGuilds();
     }
 
-    @DeleteMapping("/guilds/{guildId}")
-    public String deleteExistingGuild(@PathVariable int guildId){
-        guildService.deleteExistingGuild(guildId);
-        return "Guild Deleted Successfully. Guild ID = " + guildId;
+    @DeleteMapping("/user/removeguild/{guildId}")
+    public String deleteExistingGuild(@RequestHeader("Authorization") String bearerToken,
+                                      @PathVariable int guildId){
+        return guildService.deleteExistingGuild(StaticMethods.getJwtFromRequestHeader(bearerToken), guildId);
+    }
+
+    @DeleteMapping("/admin/removeguild/{guildId}")
+    public String deleteExistingGuildAsAdmin(@PathVariable int guildId){
+        return guildService.deleteExistingGuildAsAdmin(guildId);
     }
 
 }

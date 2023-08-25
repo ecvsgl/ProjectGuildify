@@ -1,14 +1,12 @@
 package com.guildify.guildify.controller;
 
-import com.guildify.guildify.model.CalendarEventEntity;
-import com.guildify.guildify.model.GameCharEntity;
-import com.guildify.guildify.model.GameEntity;
-import com.guildify.guildify.model.dto.GameRequest;
-import com.guildify.guildify.model.dto.GameResponse;
+
+import com.guildify.guildify.model.dto.CalendarEventRequest;
+import com.guildify.guildify.model.dto.CalendarEventResponse;
 import com.guildify.guildify.service.CalendarEventService;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,30 +18,33 @@ public class CalenderEventController {
     @Autowired
     private CalendarEventService calendarEventService;
 
-    @GetMapping("/events")
-    public List<CalendarEventEntity> getAllCalenderEvents() {
+    @GetMapping("/user/events")
+    public List<CalendarEventResponse> getAllCalenderEvents(@RequestHeader("Authorization") String bearerToken) {
         log.info("Calenders has been searched");
-        return calendarEventService.getAllCalenderEvents();
+        return calendarEventService.getAllCalenderEvents(StaticMethods.getJwtFromRequestHeader(bearerToken));
     }
 
-    @GetMapping("/events/{eventId}")
-    public CalendarEventEntity getCalenderEventById(@PathVariable int eventId) {
-        return calendarEventService.getCalenderEventById(eventId);
+    @GetMapping("/admin/events/{eventId}")
+    public CalendarEventResponse getCalenderEventById(@RequestHeader("Authorization") String bearerToken,
+                                                      @PathVariable int eventId) {
+        return calendarEventService.getCalenderEventById(StaticMethods.getJwtFromRequestHeader(bearerToken),eventId);
     }
 
-
-    @PostMapping("/events")
-    public ResponseEntity<CalendarEventEntity> addNewEvent(@RequestBody CalendarEventEntity event) {
-        return ResponseEntity.ok().body(calendarEventService.addNewEvent(event));
+    @PostMapping("/admin/newevent")
+    public CalendarEventResponse addNewEvent(@RequestHeader("Authorization") String bearerToken,
+                                             @RequestBody CalendarEventRequest event) {
+        return calendarEventService.addNewEvent(StaticMethods.getJwtFromRequestHeader(bearerToken),event);
     }
 
-    @PutMapping("/events")
-    public CalendarEventEntity updateEvent(@RequestBody CalendarEventEntity event) {
-        return calendarEventService.updateEvent(event);
+    @PutMapping("/admin/updateevent/{eventId}")
+    public CalendarEventResponse updateEvent(@RequestHeader("Authorization") String bearerToken,
+                                             @RequestBody CalendarEventRequest event,
+                                             @PathVariable int eventId) {
+        return calendarEventService.updateEvent(StaticMethods.getJwtFromRequestHeader(bearerToken),event,eventId);
     }
 
-    @DeleteMapping("/events")
-    public void deleteExistingEvent(@RequestBody CalendarEventEntity event) {
-        calendarEventService.deleteExistingEvent(event);
+    @DeleteMapping("/admin/removeevent/{eventId}") //Better get as eventId since name is not unique.
+    public String deleteExistingEvent(@PathVariable int eventId) {
+        return calendarEventService.deleteExistingEvent(eventId);
     }
 }

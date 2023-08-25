@@ -7,6 +7,5 @@ import lombok.Data;
 @Data
 public class PostCommentRequest {
     private String commentContent;
-    private int userId;
     private int postId;
 }

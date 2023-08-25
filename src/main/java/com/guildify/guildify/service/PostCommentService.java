@@ -1,6 +1,7 @@
 package com.guildify.guildify.service;
 
 import com.guildify.guildify.model.PostCommentsEntity;
+import com.guildify.guildify.model.UserEntity;
 import com.guildify.guildify.model.dto.PostCommentRequest;
 import com.guildify.guildify.model.dto.PostCommentResponse;
 import com.guildify.guildify.repository.PostCommentsRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PostCommentService {
@@ -21,78 +23,85 @@ public class PostCommentService {
     private UserRepository userRepository;
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private TokenService tokenService;
 
-    public PostCommentResponse createNewPostComment(PostCommentRequest postCommentRequest){
+    public PostCommentResponse createNewPostComment(String jwt, PostCommentRequest postCommentRequest){
         PostCommentsEntity postCommentsEntity = PostCommentsEntity.builder()
                 .commentContent(postCommentRequest.getCommentContent())
-                .userEntity(userRepository.findUserEntityByUserId(postCommentRequest.getUserId()))
+                .userEntity(jwtUserEntityExtractor(jwt))
                 .postEntity(postRepository.findPostEntityByPostId(postCommentRequest.getPostId()))
                 .build();
-        postCommentsEntity.setCreatedBy(postCommentsEntity.getUserEntity().getDisplayName());
+        postCommentsEntity.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
         postCommentsEntity.setTimestamp(LocalDateTime.now());
         //Persistance to DB
         postCommentsEntity = postCommentsRepository.save(postCommentsEntity);
         //Response Building...
-        PostCommentResponse postCommentResponse = PostCommentResponse.builder()
-                .commentContent(postCommentsEntity.getCommentContent())
-                .senderDisplayName(postCommentsEntity.getUserEntity().getDisplayName())
-                .timestamp(postCommentsEntity.getTimestamp())
-                .postId(postCommentsEntity.getPostEntity().getPostId())
-                .build();
-        postCommentResponse.setCreatedAt(LocalDateTime.now());
-        postCommentResponse.setCreatedBy(postCommentResponse.getCreatedBy());
-        return postCommentResponse;
+        return postCommentEntityToResponseMapper(jwt,postCommentsEntity);
     }
-    public List<PostCommentResponse> getAllPostCommentsOfPost(int postId){
+    public List<PostCommentResponse> getAllPostCommentsOfPost(String jwt, int postId){
+        if(!postCommentsRepository.existsById(postId)){
+            return null;
+        }
         List<PostCommentsEntity> allPostCommentsOfPost = postCommentsRepository
                 .findPostCommentsEntitiesByPostEntity_PostId(postId);
+
         List<PostCommentResponse> allPostCommentsOfPostAsResponse = new ArrayList<>();
         for(PostCommentsEntity postCommentsEntity : allPostCommentsOfPost){
-            PostCommentResponse postCommentResponse = PostCommentResponse.builder()
-                    .commentContent(postCommentsEntity.getCommentContent())
-                    .senderDisplayName(postCommentsEntity.getUserEntity().getDisplayName())
-                    .timestamp(postCommentsEntity.getTimestamp())
-                    .postId(postCommentsEntity.getPostEntity().getPostId())
-                    .build();
-            postCommentResponse.setCreatedBy(postCommentsEntity.getCreatedBy());
-            postCommentResponse.setCreatedAt(LocalDateTime.now());
-
-            allPostCommentsOfPostAsResponse.add(postCommentResponse);
+            allPostCommentsOfPostAsResponse.add(postCommentEntityToResponseMapper(jwt,postCommentsEntity));
         }
         return allPostCommentsOfPostAsResponse;
     }
-    public PostCommentResponse getSpecificPostComment(int commentId){
-        PostCommentsEntity postCommentsEntity = postCommentsRepository.findPostCommentsEntityByCommentId(commentId);
-        PostCommentResponse postCommentResponse = PostCommentResponse.builder()
-                .commentContent(postCommentsEntity.getCommentContent())
-                .senderDisplayName(postCommentsEntity.getUserEntity().getDisplayName())
-                .timestamp(postCommentsEntity.getTimestamp())
-                .postId(postCommentsEntity.getPostEntity().getPostId())
-                .build();
-        postCommentResponse.setCreatedBy(postCommentsEntity.getCreatedBy());
-        postCommentResponse.setCreatedAt(LocalDateTime.now());
-        return postCommentResponse;
+    public PostCommentResponse getSpecificPostComment(String jwt, int commentId){
+        if(!postCommentsRepository.existsById(commentId)){
+            return null;
+        }
+        return postCommentEntityToResponseMapper(jwt, postCommentsRepository.findPostCommentsEntityByCommentId(commentId)) ;
     }
-    public List<PostCommentResponse> getAllPostCommentsOfUser(int userId){
+    public List<PostCommentResponse> getAllPostCommentsOfUser(String jwt, int userId){
         List<PostCommentsEntity> allPostCommentsOfPost = postCommentsRepository
                 .findPostCommentsEntitiesByUserEntity_UserId(userId);
+        if(allPostCommentsOfPost==null){
+            return null;
+        }
         List<PostCommentResponse> allPostCommentsOfUserAsResponse = new ArrayList<>();
         for(PostCommentsEntity postCommentsEntity : allPostCommentsOfPost){
-            PostCommentResponse postCommentResponse = PostCommentResponse.builder()
-                    .commentContent(postCommentsEntity.getCommentContent())
-                    .senderDisplayName(postCommentsEntity.getUserEntity().getDisplayName())
-                    .timestamp(postCommentsEntity.getTimestamp())
-                    .postId(postCommentsEntity.getPostEntity().getPostId())
-                    .build();
-            postCommentResponse.setCreatedBy(postCommentsEntity.getCreatedBy());
-            postCommentResponse.setCreatedAt(LocalDateTime.now());
-
-            allPostCommentsOfUserAsResponse.add(postCommentResponse);
+            allPostCommentsOfUserAsResponse.add(postCommentEntityToResponseMapper(jwt,postCommentsEntity));
         }
         return allPostCommentsOfUserAsResponse;
     }
 
-    public void deletePostComment(int commentId){
+    public String deletePostComment(String jwt, int commentId){
+        if(!postCommentsRepository.existsById(commentId)){
+            return "No such comment exists.";
+        } else if (postCommentsRepository.findPostCommentsEntityByCommentId(commentId).getUserEntity() != jwtUserEntityExtractor(jwt)){
+            return "You cannot delete someone else's comment.";
+        }
         postCommentsRepository.delete(postCommentsRepository.findPostCommentsEntityByCommentId(commentId));
+        return "Comment deleted successfully.";
+    }
+    public String deletePostCommentAsAdmin(int commentId){
+        if(!postCommentsRepository.existsById(commentId)){
+            return "No such comment exists.";
+        }
+        postCommentsRepository.delete(postCommentsRepository.findPostCommentsEntityByCommentId(commentId));
+        return "Comment deleted successfully.";
+    }
+
+    public PostCommentResponse postCommentEntityToResponseMapper(String jwt, PostCommentsEntity postCommentsEntity){
+          PostCommentResponse postCommentResponse = PostCommentResponse.builder()
+                  .commentId(postCommentsEntity.getCommentId())
+                  .commentContent(postCommentsEntity.getCommentContent())
+                  .senderDisplayName(postCommentsEntity.getUserEntity().getDisplayName())
+                  .postId(postCommentsEntity.getPostEntity().getPostId())
+                  .build();
+          postCommentResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+          postCommentResponse.setCreatedAt(LocalDateTime.now());
+          return  postCommentResponse;
+    }
+
+    public UserEntity jwtUserEntityExtractor(String jwt){
+        Map<String, Object> claims = tokenService.decodeJwt(jwt).getClaims();
+        return userRepository.findUserEntityByUsername((String)claims.get("sub"));
     }
 }

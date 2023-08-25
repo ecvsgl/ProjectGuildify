@@ -1,11 +1,10 @@
 package com.guildify.guildify.controller;
 
 
-import com.guildify.guildify.model.UserEntity;
 import com.guildify.guildify.model.dto.UserRequest;
 import com.guildify.guildify.model.dto.UserResponse;
 import com.guildify.guildify.service.UserService;
-import lombok.RequiredArgsConstructor;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,23 +17,24 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @GetMapping("/userSearch/{userId}")
-    public UserEntity getSpecificUserEntity(@PathVariable int userId){
-        return userService.getSpecificUserEntity(userId);
+    @GetMapping("/admin/usersearch/{userDisplayName}")
+    public UserResponse getSpecificUserEntity(@RequestHeader("Authorization") String bearerToken,
+                                              @PathVariable String userDisplayName){
+        return userService.getSpecificUserEntity(StaticMethods.getJwtFromRequestHeader(bearerToken), userDisplayName);
     }
-    @GetMapping("/userlist")
-    public List<UserEntity> getAllUserEntities(){
-        return userService.getAllUserEntities();
+    @GetMapping("/admin/allusers")
+    public List<UserResponse> getAllUserEntities(@RequestHeader("Authorization") String bearerToken){
+        return userService.getAllUserEntities(StaticMethods.getJwtFromRequestHeader(bearerToken));
     }
-    @DeleteMapping("/rmuser/{userId}")
-    public String deleteUserEntity(@PathVariable Integer userId){
-        userService.deleteUserEntity(userId);
-        return "User Deleted Successfully.";
+    @DeleteMapping("/admin/deleteuser/{userId}")
+    public String deleteUserEntity(@RequestHeader("Authorization") String bearerToken,
+                                            @PathVariable Integer userId){
+        return userService.deleteUserEntity(StaticMethods.getJwtFromRequestHeader(bearerToken), userId);
     }
-    @PutMapping("/userpwchange/{userId}")
-    public String updateUserEntityPassword(@PathVariable Integer userId,
-                                           @RequestBody String newPassword){
-        userService.updateUserEntityPassword(userId,newPassword);
-        return "Password Changed Successfully.";
+    @PutMapping("/user/userpasswordchange")
+    public String updateUserEntityPassword(@RequestHeader("Authorization") String bearerToken,
+                                           @RequestBody UserRequest userRequest){
+        return userService.updateUserEntityPassword(StaticMethods.getJwtFromRequestHeader(bearerToken),userRequest);
+
     }
 }
