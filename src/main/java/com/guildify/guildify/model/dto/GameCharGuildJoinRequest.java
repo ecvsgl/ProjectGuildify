@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PostRequest {
-    private String postContent;
+public class GameCharGuildJoinRequest {
+    private int charId;
+    private String guildName;
 }

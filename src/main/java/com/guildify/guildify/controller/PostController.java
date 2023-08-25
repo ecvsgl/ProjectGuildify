@@ -3,6 +3,7 @@ package com.guildify.guildify.controller;
 import com.guildify.guildify.model.dto.PostRequest;
 import com.guildify.guildify.model.dto.PostResponse;
 import com.guildify.guildify.service.PostService;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,26 +15,34 @@ import java.util.List;
 public class PostController {
     @Autowired
     private PostService postService;
-    @PostMapping("/post")
-    public PostResponse createNewPostEntity(@RequestBody PostRequest postRequest){
-        return postService.createNewPostEntity(postRequest);
+    @PostMapping("/user/newpost")
+    public PostResponse createNewPostEntity(@RequestHeader("Authorization") String bearerToken,
+                                            @RequestBody PostRequest postRequest){
+        return postService.createNewPostEntity(StaticMethods.getJwtFromRequestHeader(bearerToken), postRequest);
     }
-    @GetMapping("/posts")
-    public List<PostResponse> getAllPosts(){
-        return postService.getAllPosts();
+    @GetMapping("/user/allposts")
+    public List<PostResponse> getAllPosts(@RequestHeader("Authorization") String bearerToken){
+        return postService.getAllPosts(StaticMethods.getJwtFromRequestHeader(bearerToken));
     }
-    @GetMapping("/posts/{userId}")
-    public List<PostResponse> getAllPostsOfAUserEntity(@PathVariable int userId){
-        return postService.getAllPostsOfAUserEntity(userId);
+    @GetMapping("/admin/posts/{userDisplayName}")
+    public List<PostResponse> getAllPostsOfAUserEntity(@RequestHeader("Authorization") String bearerToken,
+                                                       @PathVariable String userDisplayName){
+        return postService.getAllPostsOfAUserEntity(StaticMethods.getJwtFromRequestHeader(bearerToken),userDisplayName);
     }
-    @GetMapping("/post/{postId}")
-    public PostResponse getPostByPostId(@PathVariable int postId){
-        return postService.getPostByPostId(postId);
+    @GetMapping("/admin/post/{postId}")
+    public PostResponse getPostByPostId(@RequestHeader("Authorization") String bearerToken,
+                                        @PathVariable int postId){
+        return postService.getPostByPostId(StaticMethods.getJwtFromRequestHeader(bearerToken), postId);
     }
-    @DeleteMapping("/post/{postId}")
-    public String deletePostEntity(@PathVariable int postId){
-        postService.deletePostEntity(postId);
-        return "Post Deleted Successfully";
+    @DeleteMapping("/user/post/{postId}")
+    public String deletePostEntity(@RequestHeader("Authorization") String bearerToken,
+                                   @PathVariable int postId){
+        return postService.deletePostEntity(StaticMethods.getJwtFromRequestHeader(bearerToken),postId);
+    }
+
+    @DeleteMapping("/admin/post/{postId}")
+    public String deletePostEntityAsAdmin(@PathVariable int postId){
+        return postService.deletePostEntityAsAdmin(postId);
     }
 
 }

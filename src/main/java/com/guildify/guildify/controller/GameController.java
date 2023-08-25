@@ -1,13 +1,13 @@
 package com.guildify.guildify.controller;
 
-import com.guildify.guildify.model.GameCharEntity;
-import com.guildify.guildify.model.GameEntity;
+
+import com.guildify.guildify.model.dto.GameCharResponse;
 import com.guildify.guildify.model.dto.GameRequest;
 import com.guildify.guildify.model.dto.GameResponse;
 import com.guildify.guildify.service.GameService;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,35 +19,40 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @GetMapping("/games")
-    public List<GameEntity> getAllGames() {
+    @GetMapping("/user/games")
+    public List<GameResponse> getAllGames(@RequestHeader("Authorization") String bearerToken) {
         log.info("Games has been searched");
-        return gameService.getAllGames();
+        return gameService.getAllGames(StaticMethods.getJwtFromRequestHeader(bearerToken));
     }
 
-    @GetMapping("/games/{gameId}")
-    public GameEntity getGamesById(@PathVariable int gameId) {
-        return gameService.getGamesById(gameId);
+    @GetMapping("/user/games/{gameId}")
+    public GameResponse getGameById(@RequestHeader("Authorization") String bearerToken,
+                                     @PathVariable int gameId) {
+        return gameService.getGameById(StaticMethods.getJwtFromRequestHeader(bearerToken),gameId);
     }
 
-    @GetMapping("/games/characters/{gameId}")
-    public List<GameCharEntity> getCharsByGameId(@PathVariable int gameId) {
-        return gameService.getCharsByGameId(gameId);
+    @GetMapping("/user/games/characters/{gameId}")
+    public List<GameCharResponse> getCharsByGameId(@RequestHeader("Authorization") String bearerToken,
+                                                   @PathVariable int gameId) {
+        return gameService.getCharsByGameId(StaticMethods.getJwtFromRequestHeader(bearerToken),gameId);
     }
 
-    @PostMapping("/games")
-    public ResponseEntity<GameResponse> addNewGame(@RequestBody GameRequest game) {
-        return ResponseEntity.ok().body(gameService.addNewGame(game));
+    @PostMapping("/admin/games")
+    public GameResponse addNewGame(@RequestHeader("Authorization") String bearerToken,
+                                   @RequestBody GameRequest game) {
+        return gameService.addNewGame(StaticMethods.getJwtFromRequestHeader(bearerToken),game);
     }
 
-    @PutMapping("/games")
-    public GameEntity updateExistingGame(@RequestBody GameEntity game) {
-        return gameService.updateExistingGame(game);
+    @PutMapping("/admin/games/{gameId}")
+    public GameResponse updateExistingGame(@RequestHeader("Authorization") String bearerToken,
+                                           @RequestBody GameRequest gameRequest,
+                                           @PathVariable int gameId) {
+        return gameService.updateExistingGame(StaticMethods.getJwtFromRequestHeader(bearerToken),gameRequest, gameId);
     }
 
-    @DeleteMapping("/games/{gameId}")
-    public void deleteExistingGame(@PathVariable int gameId) {
-        gameService.deleteExistingGame(gameId);
+    @DeleteMapping("/admin/games/{gameId}")
+    public String deleteExistingGame(@PathVariable int gameId) {
+        return gameService.deleteExistingGame(gameId);
     }
 
 }
