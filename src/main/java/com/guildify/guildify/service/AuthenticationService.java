@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +59,8 @@ public class AuthenticationService {
                 .gameCharEntityList(null)
                 .authorities(userAuthorities)
                 .build();
+        userEntity.setCreatedBy(userEntity.getDisplayName());
+        userEntity.setTimestamp(LocalDateTime.now());
         userEntity = userRepository.save(userEntity);
         //Entity to Response mapping...
         return userEntityToResponseMapper(userEntity);
@@ -85,6 +88,8 @@ public class AuthenticationService {
                 .accountRank(userEntity.getAccountRank())
                 .gameCharResponseList(null)
                 .build();
+        userResponse.setCreatedAt(LocalDateTime.now());
+        userResponse.setCreatedBy(userEntity.getDisplayName());
         return userResponse;
     }
 }
