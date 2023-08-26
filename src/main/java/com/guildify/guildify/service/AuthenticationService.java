@@ -8,6 +8,7 @@ import com.guildify.guildify.model.dto.UserRequest;
 import com.guildify.guildify.model.dto.UserResponse;
 import com.guildify.guildify.repository.RoleRepository;
 import com.guildify.guildify.repository.UserRepository;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,8 +40,23 @@ public class AuthenticationService {
         if(userRepository.findUserEntityByDisplayName(userRequest.getDisplayName())!=null){
             throw new IllegalArgumentException("Please provide another displayname.");
         }
+        if(userRequest.getUsername() == null || userRequest.getDisplayName() == null || userRequest.getPassword() == null || userRequest.getEmail() == null){
+            throw new IllegalArgumentException("Please do not leave any field empty and try again.");
+        }
+        if(userRequest.getUsername().length()<5 || userRequest.getDisplayName().length()<5 || userRequest.getPassword().length()<5 || userRequest.getEmail().length()<5){
+            throw new IllegalArgumentException("Username, Password, Displayname or Email cannot be shorter than 5 characters.");
+        }
+        if(StaticMethods.isNumeric(userRequest.getUsername()) || StaticMethods.isNumeric(userRequest.getDisplayName()) || StaticMethods.isNumeric(userRequest.getPassword()) || StaticMethods.isNumeric(userRequest.getEmail())){
+            throw new IllegalArgumentException("Please do not provide any field only numeric and try again.");
+        }
         Set<Role> userAuthorities = new HashSet<>();
-        userAuthorities.add(roleRepository.findRoleByAuthority("STANDARD_USER"));
+        Role standardRole = roleRepository.findRoleByAuthority("STANDARD_USER");
+        if(standardRole==null){
+            standardRole = new Role();
+            standardRole.setAuthority("STANDARD_USER");
+            standardRole = roleRepository.save(standardRole);
+        }
+        userAuthorities.add(standardRole);
         //Request to Entity mapping.
         UserEntity userEntity = UserEntity.builder()
                 .username(userRequest.getUsername())
@@ -52,6 +69,8 @@ public class AuthenticationService {
                 .gameCharEntityList(null)
                 .authorities(userAuthorities)
                 .build();
+        userEntity.setCreatedBy(userEntity.getDisplayName());
+        userEntity.setTimestamp(LocalDateTime.now());
         userEntity = userRepository.save(userEntity);
         //Entity to Response mapping...
         return userEntityToResponseMapper(userEntity);
@@ -79,6 +98,8 @@ public class AuthenticationService {
                 .accountRank(userEntity.getAccountRank())
                 .gameCharResponseList(null)
                 .build();
+        userResponse.setCreatedAt(LocalDateTime.now());
+        userResponse.setCreatedBy(userEntity.getDisplayName());
         return userResponse;
     }
 }
