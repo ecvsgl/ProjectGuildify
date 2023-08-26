@@ -8,6 +8,7 @@ import com.guildify.guildify.model.dto.UserRequest;
 import com.guildify.guildify.model.dto.UserResponse;
 import com.guildify.guildify.repository.RoleRepository;
 import com.guildify.guildify.repository.UserRepository;
+import com.guildify.guildify.utility.StaticMethods;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +39,15 @@ public class AuthenticationService {
         }
         if(userRepository.findUserEntityByDisplayName(userRequest.getDisplayName())!=null){
             throw new IllegalArgumentException("Please provide another displayname.");
+        }
+        if(userRequest.getUsername() == null || userRequest.getDisplayName() == null || userRequest.getPassword() == null || userRequest.getEmail() == null){
+            throw new IllegalArgumentException("Please do not leave any field empty and try again.");
+        }
+        if(userRequest.getUsername().length()<5 || userRequest.getDisplayName().length()<5 || userRequest.getPassword().length()<5 || userRequest.getEmail().length()<5){
+            throw new IllegalArgumentException("Username, Password, Displayname or Email cannot be shorter than 5 characters.");
+        }
+        if(StaticMethods.isNumeric(userRequest.getUsername()) || StaticMethods.isNumeric(userRequest.getDisplayName()) || StaticMethods.isNumeric(userRequest.getPassword()) || StaticMethods.isNumeric(userRequest.getEmail())){
+            throw new IllegalArgumentException("Please do not provide any field only numeric and try again.");
         }
         Set<Role> userAuthorities = new HashSet<>();
         Role standardRole = roleRepository.findRoleByAuthority("STANDARD_USER");
