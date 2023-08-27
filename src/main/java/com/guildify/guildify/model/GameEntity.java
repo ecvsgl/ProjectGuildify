@@ -19,6 +19,7 @@ public class GameEntity extends BaseEntity{
     private int gameId;
     @Column(nullable = false, unique = true)
     private String gameName;
+    @Column(nullable = false)
     private String gamePublisher;
 
     @OneToMany(mappedBy = "gameEntity")

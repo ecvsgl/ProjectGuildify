@@ -78,19 +78,23 @@ public class PostService {
                 .postContent(postEntity.getPostContent())
                 .postOwnerDisplayName(postEntity.getUserEntity().getDisplayName())
                 .build();
-        List<PostCommentResponse> postComments = new ArrayList<>();
-        for(PostCommentsEntity x : postEntity.getPostCommentsEntityList()){
-            PostCommentResponse postCommentResponse = PostCommentResponse.builder()
-                    .commentId(x.getCommentId())
-                    .commentContent(x.getCommentContent())
-                    .senderDisplayName(x.getUserEntity().getDisplayName())
-                    .postId(x.getPostEntity().getPostId())
-                    .build();
-            postCommentResponse.setCreatedAt(LocalDateTime.now());
-            postCommentResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
-            postComments.add(postCommentResponse);
+        if (postEntity.getPostCommentsEntityList() != null) {
+            List<PostCommentResponse> postComments = new ArrayList<>();
+            for(PostCommentsEntity x : postEntity.getPostCommentsEntityList()){
+                PostCommentResponse postCommentResponse = PostCommentResponse.builder()
+                        .commentId(x.getCommentId())
+                        .commentContent(x.getCommentContent())
+                        .senderDisplayName(x.getUserEntity().getDisplayName())
+                        .postId(x.getPostEntity().getPostId())
+                        .build();
+                postCommentResponse.setCreatedAt(LocalDateTime.now());
+                postCommentResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+                postComments.add(postCommentResponse);
+            }
+            postResponse.setPostCommentsList(postComments);
+        } else {
+            postResponse.setPostCommentsList(null);
         }
-        postResponse.setPostCommentsList(postComments);
         postResponse.setCreatedAt(LocalDateTime.now());
         postResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
         return postResponse;

@@ -138,21 +138,23 @@ public class GuildService {
                 .build();
         guildResponse.setCreatedAt(LocalDateTime.now());
         guildEntity.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
-        List<GameCharResponse> gameCharResponseList = new ArrayList<>();
-        for(GameCharEntity x:  guildEntity.getGameCharEntityList()){
-            GameCharResponse gameCharResponse = GameCharResponse.builder()
-                    .charId(x.getCharId())
-                    .charName(x.getCharName())
-                    .charLevel(x.getCharLevel())
-                    .charOwner(x.getUserEntity().getDisplayName())
-                    .charGameName(x.getGameEntity().getGameName())
-                    .charGuildName(x.getGuildEntity().getGuildName())
-                    .build();
-            gameCharResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
-            gameCharResponse.setCreatedAt(LocalDateTime.now());
-            gameCharResponseList.add(gameCharResponse);
+        if(guildEntity.getGameCharEntityList()!=null){
+            List<GameCharResponse> gameCharResponseList = new ArrayList<>();
+            for(GameCharEntity x:  guildEntity.getGameCharEntityList()){
+                GameCharResponse gameCharResponse = GameCharResponse.builder()
+                        .charId(x.getCharId())
+                        .charName(x.getCharName())
+                        .charLevel(x.getCharLevel())
+                        .charOwner(x.getUserEntity().getDisplayName())
+                        .charGameName(x.getGameEntity().getGameName())
+                        .charGuildName(x.getGuildEntity().getGuildName())
+                        .build();
+                gameCharResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+                gameCharResponse.setCreatedAt(LocalDateTime.now());
+                gameCharResponseList.add(gameCharResponse);
+            }
+            guildResponse.setGameCharResponseList(gameCharResponseList);
         }
-        guildResponse.setGameCharResponseList(gameCharResponseList);
         return guildResponse;
     }
 

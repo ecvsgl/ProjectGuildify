@@ -143,8 +143,6 @@ public class GameCharService {
         return gameCharEntityToResponseMapper(jwt,foundChar);
     }
 
-
-
     public GameCharResponse gameCharEntityToResponseMapper(String jwt,GameCharEntity entity){
         GameCharResponse response = GameCharResponse.builder()
                 .charId(entity.getCharId())
@@ -152,8 +150,12 @@ public class GameCharService {
                 .charLevel(entity.getCharLevel())
                 .charOwner(entity.getUserEntity().getDisplayName())
                 .charGameName(entity.getGameEntity().getGameName())
-                .charGuildName(entity.getGuildEntity().getGuildName())
                 .build();
+        if(entity.getGuildEntity()==null){
+            response.setCharGuildName(null);
+        } else{
+            response.setCharGuildName(entity.getGuildEntity().getGuildName());
+        }
         response.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
         response.setCreatedAt(LocalDateTime.now());
         return response;
