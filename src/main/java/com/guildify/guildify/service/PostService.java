@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -41,6 +39,8 @@ public class PostService {
         for(PostEntity postEntity: postRepository.findAll()){
             allPostsToPostResponse.add(postEntityToPostResponseMapper(jwt,postEntity));
         }
+        // Sort the list by createdAt field
+        Collections.sort(allPostsToPostResponse, Comparator.comparing(PostResponse::getPostTimestamp).reversed());
         return allPostsToPostResponse;
     }
     public List<PostResponse> getAllPostsOfAUserEntity(String jwt,String userDisplayName){
@@ -78,7 +78,9 @@ public class PostService {
                 .postContent(postEntity.getPostContent())
                 .postOwnerDisplayName(null)
                 .postCommentsList(null)
+                .postTimestamp(postEntity.getTimestamp())
                 .build();
+
         if(postEntity.getUserEntity()!=null){
             postResponse.setPostOwnerDisplayName(postEntity.getUserEntity().getDisplayName());
         }
@@ -90,11 +92,13 @@ public class PostService {
                         .commentContent(x.getCommentContent())
                         .senderDisplayName(x.getUserEntity().getDisplayName())
                         .postId(x.getPostEntity().getPostId())
+                        .commentTimestamp(x.getTimestamp())
                         .build();
                 postCommentResponse.setCreatedAt(LocalDateTime.now());
                 postCommentResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
                 postComments.add(postCommentResponse);
             }
+            Collections.sort(postComments, Comparator.comparing(PostCommentResponse::getCommentTimestamp));
             postResponse.setPostCommentsList(postComments);
         }
         postResponse.setCreatedAt(LocalDateTime.now());

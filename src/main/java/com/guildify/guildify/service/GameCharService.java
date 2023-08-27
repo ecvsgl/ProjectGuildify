@@ -89,6 +89,10 @@ public class GameCharService {
         if(gameCharRepository.findGameCharEntityByCharId(charId) == null){
             throw new IllegalArgumentException("There is no such ID. CharId = " + charId);
         }
+        if(jwtUserEntityExtractor(jwt)!=gameCharRepository.findGameCharEntityByCharId(charId).getUserEntity()){
+            throw new IllegalArgumentException("You cannot operate on other people's characters.");
+
+        }
         return gameCharEntityToResponseMapper(jwt,gameCharRepository.findGameCharEntityByCharId(charId));
     }
 
