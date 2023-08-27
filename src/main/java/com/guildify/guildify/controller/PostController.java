@@ -42,7 +42,8 @@ public class PostController {
 
     @DeleteMapping("/admin/post/{postId}")
     public String deletePostEntityAsAdmin(@PathVariable int postId){
-        return postService.deletePostEntityAsAdmin(postId);
+        return postService.deletePostEntityAsAdmin
+                (postId);
     }
 
 }

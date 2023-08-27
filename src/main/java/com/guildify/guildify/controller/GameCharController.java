@@ -39,7 +39,7 @@ public class GameCharController {
         return gameCharService.getSameGuildGameChars(StaticMethods.getJwtFromRequestHeader(bearerToken), charId);
     }
 
-    @GetMapping("/admin/gamechars/{charId}")
+    @GetMapping("/user/gamechars/{charId}")
     public GameCharResponse getGameCharById(@RequestHeader("Authorization") String bearerToken,
                                             @PathVariable int charId) {
         return gameCharService.getGameCharById(StaticMethods.getJwtFromRequestHeader(bearerToken), charId);

@@ -1,13 +1,16 @@
 package com.guildify.guildify.model.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserResponse extends MainResponse{
     private Integer userId;
     private String displayName;
