@@ -21,12 +21,19 @@ public class UserEntity extends BaseEntity implements UserDetails {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
+
     @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
     private String password;
+
     @Column(nullable = false, unique = true)
     private String displayName;
+
+    @Column(nullable = false)
     private String email;
+
     private String accountRank;
 
     @OneToMany(mappedBy = "userEntity")

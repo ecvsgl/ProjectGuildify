@@ -18,10 +18,12 @@ public class PostEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "postID", nullable = false)
     private int postId;
+
     @Column(nullable = false)
     private String postContent;
 
     @ManyToOne
+    @Column(nullable = false)
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "postEntity")

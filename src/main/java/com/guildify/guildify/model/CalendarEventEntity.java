@@ -18,6 +18,7 @@ public class CalendarEventEntity extends BaseEntity {
     private int eventId;
     @Column(nullable = false)
     private String eventName;
+    @Column(nullable = false)
     private LocalDateTime eventTime;
 
     @Override
