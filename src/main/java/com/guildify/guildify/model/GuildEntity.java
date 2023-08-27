@@ -23,11 +23,9 @@ public class GuildEntity extends BaseEntity {
     private String guildName;
 
     @OneToOne
-    @Column(nullable = false)
     private UserEntity guildLeaderUserEntity;
 
     @ManyToOne
-    @Column(nullable = false)
     private GameEntity gameEntity;
 
     @OneToMany(mappedBy = "guildEntity")

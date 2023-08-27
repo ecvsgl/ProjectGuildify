@@ -23,7 +23,6 @@ public class PostEntity extends BaseEntity {
     private String postContent;
 
     @ManyToOne
-    @Column(nullable = false)
     private UserEntity userEntity;
 
     @OneToMany(mappedBy = "postEntity")

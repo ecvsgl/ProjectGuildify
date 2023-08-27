@@ -148,9 +148,18 @@ public class GameCharService {
                 .charId(entity.getCharId())
                 .charName(entity.getCharName())
                 .charLevel(entity.getCharLevel())
-                .charOwner(entity.getUserEntity().getDisplayName())
                 .charGameName(entity.getGameEntity().getGameName())
                 .build();
+        if(entity.getUserEntity()==null){
+            response.setCharOwner(null);
+        } else{
+            response.setCharOwner(entity.getUserEntity().getDisplayName());
+        }
+        if(entity.getGameEntity()==null){
+            response.setCharGameName(null);
+        } else{
+            response.setCharGameName(entity.getGameEntity().getGameName());
+        }
         if(entity.getGuildEntity()==null){
             response.setCharGuildName(null);
         } else{

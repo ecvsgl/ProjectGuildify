@@ -27,6 +27,9 @@ public class PostCommentService {
     private TokenService tokenService;
 
     public PostCommentResponse createNewPostComment(String jwt, PostCommentRequest postCommentRequest){
+        if(postRepository.findPostEntityByPostId(postCommentRequest.getPostId())==null){
+            throw new IllegalArgumentException("A comment must be related to a post itself.");
+        }
         PostCommentsEntity postCommentsEntity = PostCommentsEntity.builder()
                 .commentContent(postCommentRequest.getCommentContent())
                 .userEntity(jwtUserEntityExtractor(jwt))
@@ -89,15 +92,20 @@ public class PostCommentService {
     }
 
     public PostCommentResponse postCommentEntityToResponseMapper(String jwt, PostCommentsEntity postCommentsEntity){
-          PostCommentResponse postCommentResponse = PostCommentResponse.builder()
-                  .commentId(postCommentsEntity.getCommentId())
-                  .commentContent(postCommentsEntity.getCommentContent())
-                  .senderDisplayName(postCommentsEntity.getUserEntity().getDisplayName())
-                  .postId(postCommentsEntity.getPostEntity().getPostId())
-                  .build();
-          postCommentResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
-          postCommentResponse.setCreatedAt(LocalDateTime.now());
-          return  postCommentResponse;
+        PostCommentResponse postCommentResponse = PostCommentResponse.builder()
+              .commentId(postCommentsEntity.getCommentId())
+              .commentContent(postCommentsEntity.getCommentContent())
+              .senderDisplayName(null)
+              .build();
+        if(postCommentsEntity.getUserEntity()!=null){
+          postCommentResponse.setSenderDisplayName(postCommentsEntity.getUserEntity().getDisplayName());
+        }
+        if(postCommentsEntity.getPostEntity()!=null){
+            postCommentResponse.setPostId(postCommentsEntity.getPostEntity().getPostId());
+        }
+        postCommentResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+        postCommentResponse.setCreatedAt(LocalDateTime.now());
+        return postCommentResponse;
     }
 
     public UserEntity jwtUserEntityExtractor(String jwt){

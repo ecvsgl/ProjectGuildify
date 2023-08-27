@@ -54,6 +54,12 @@ public class GuildService {
         if(guildRepository.findGuildEntityByGuildName(guildRequest.getGuildName())!=null){
             throw new IllegalArgumentException("Please create a guild with a different name.");
         }
+        if(userRepository.findUserEntityByDisplayName(guildRequest.getGuildLeaderUserDisplayName())==null){
+            throw new IllegalArgumentException("A guild must have a leader.");
+        }
+        if(gameRepository.findGameEntityByGameName(guildRequest.getGameName())==null){
+            throw new IllegalArgumentException("A guild must be related to a game.");
+        }
         // DTO to Entity mapper
         GuildEntity guildEntity = GuildEntity.builder()
                 .guildName(guildRequest.getGuildName())
@@ -132,12 +138,18 @@ public class GuildService {
         GuildResponse guildResponse = GuildResponse.builder()
                 .guildId(guildEntity.getGuildId())
                 .guildName(guildEntity.getGuildName())
-                .guildLeaderUserDisplayName(guildEntity.getGuildLeaderUserEntity().getDisplayName())
-                .gameName(guildEntity.getGameEntity().getGameName())
+                .guildLeaderUserDisplayName(null)
+                .gameName(null)
                 .gameCharResponseList(null)
                 .build();
         guildResponse.setCreatedAt(LocalDateTime.now());
         guildEntity.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+        if(guildEntity.getGuildLeaderUserEntity()!=null){
+            guildResponse.setGuildLeaderUserDisplayName(guildEntity.getGuildLeaderUserEntity().getDisplayName());
+        }
+        if(guildEntity.getGameEntity()!=null){
+            guildResponse.setGameName(guildEntity.getGameEntity().getGameName());
+        }
         if(guildEntity.getGameCharEntityList()!=null){
             List<GameCharResponse> gameCharResponseList = new ArrayList<>();
             for(GameCharEntity x:  guildEntity.getGameCharEntityList()){

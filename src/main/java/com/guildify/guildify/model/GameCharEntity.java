@@ -21,11 +21,9 @@ public class GameCharEntity extends BaseEntity {
     private String charLevel;
 
     @ManyToOne
-    @Column(nullable = false)
     private UserEntity userEntity;
 
     @ManyToOne
-    @Column(nullable = false)
     private GameEntity gameEntity;
 
     @ManyToOne
