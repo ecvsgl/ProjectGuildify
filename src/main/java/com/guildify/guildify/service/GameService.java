@@ -110,28 +110,31 @@ public class GameService {
     }
 
     public GameResponse gameEntityToResponseMapper(String jwt, GameEntity game){
-        List<GameCharResponse> gameCharResponseList = new ArrayList<>();
-        for(GameCharEntity x:  game.getGameCharEntityList()){
-            GameCharResponse gameCharResponse = GameCharResponse.builder()
-                    .charId(x.getCharId())
-                    .charName(x.getCharName())
-                    .charLevel(x.getCharLevel())
-                    .charOwner(x.getUserEntity().getDisplayName())
-                    .charGameName(x.getGameEntity().getGameName())
-                    .charGuildName(x.getGuildEntity().getGuildName())
-                    .build();
-            gameCharResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
-            gameCharResponse.setCreatedAt(LocalDateTime.now());
-            gameCharResponseList.add(gameCharResponse);
-        }
         GameResponse gameResponse = GameResponse.builder()
                 .gameId(game.getGameId())
                 .gameName(game.getGameName())
                 .gamePublisher(game.getGamePublisher())
-                .gameChars(gameCharResponseList)
+                .gameChars(null)
                 .build();
         gameResponse.setCreatedAt(LocalDateTime.now());
         gameResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getUsername());
+        if(game.getGameCharEntityList()!=null){
+            List<GameCharResponse> gameCharResponseList = new ArrayList<>();
+            for(GameCharEntity x:  game.getGameCharEntityList()){
+                GameCharResponse gameCharResponse = GameCharResponse.builder()
+                        .charId(x.getCharId())
+                        .charName(x.getCharName())
+                        .charLevel(x.getCharLevel())
+                        .charOwner(x.getUserEntity().getDisplayName())
+                        .charGameName(x.getGameEntity().getGameName())
+                        .charGuildName(x.getGuildEntity().getGuildName())
+                        .build();
+                gameCharResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+                gameCharResponse.setCreatedAt(LocalDateTime.now());
+                gameCharResponseList.add(gameCharResponse);
+            }
+            gameResponse.setGameChars(gameCharResponseList);
+        }
         return gameResponse;
     }
 

@@ -69,21 +69,27 @@ public class UserService {
                 .accountRank(userEntity.getAccountRank())
                 .gameCharResponseList(null)
                 .build();
-        List<GameCharResponse> gameCharResponseList = new ArrayList<>();
-        for(GameCharEntity x: userEntity.getGameCharEntityList()){
-            GameCharResponse gcr = GameCharResponse.builder()
-                    .charId(x.getCharId())
-                    .charName(x.getCharName())
-                    .charLevel(x.getCharLevel())
-                    .charOwner(x.getUserEntity().getDisplayName())
-                    .charGameName(x.getGameEntity().getGameName())
-                    .charGuildName(x.getGuildEntity().getGuildName())
-                    .build();
-            gcr.setCreatedAt(LocalDateTime.now());
-            gcr.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
-            gameCharResponseList.add(gcr);
+        if(userEntity.getGameCharEntityList()!=null){
+            List<GameCharResponse> gameCharResponseList = new ArrayList<>();
+            for(GameCharEntity x: userEntity.getGameCharEntityList()){
+                GameCharResponse gcr = GameCharResponse.builder()
+                        .charId(x.getCharId())
+                        .charName(x.getCharName())
+                        .charLevel(x.getCharLevel())
+                        .charOwner(x.getUserEntity().getDisplayName())
+                        .charGameName(x.getGameEntity().getGameName())
+                        .build();
+                if(x.getGuildEntity()==null){
+                    gcr.setCharGuildName(null);
+                } else{
+                    gcr.setCharGuildName(x.getGuildEntity().getGuildName());
+                }
+                gcr.setCreatedAt(LocalDateTime.now());
+                gcr.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
+                gameCharResponseList.add(gcr);
+            }
+            userResponse.setGameCharResponseList(gameCharResponseList);
         }
-        userResponse.setGameCharResponseList(gameCharResponseList);
         return userResponse;
     }
 
