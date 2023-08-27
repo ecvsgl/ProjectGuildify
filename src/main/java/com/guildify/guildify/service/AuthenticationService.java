@@ -46,7 +46,7 @@ public class AuthenticationService {
         if(userRequest.getUsername().length()<5 || userRequest.getDisplayName().length()<5 || userRequest.getPassword().length()<5 || userRequest.getEmail().length()<5){
             throw new IllegalArgumentException("Username, Password, Displayname or Email cannot be shorter than 5 characters.");
         }
-        if(StaticMethods.isNumeric(userRequest.getUsername()) || StaticMethods.isNumeric(userRequest.getDisplayName()) || StaticMethods.isNumeric(userRequest.getPassword()) || StaticMethods.isNumeric(userRequest.getEmail())){
+        if(StaticMethods.isNumeric(userRequest.getUsername()) || StaticMethods.isNumeric(userRequest.getDisplayName()) || StaticMethods.isNumeric(userRequest.getEmail())){
             throw new IllegalArgumentException("Please do not provide any field only numeric and try again.");
         }
         Set<Role> userAuthorities = new HashSet<>();
