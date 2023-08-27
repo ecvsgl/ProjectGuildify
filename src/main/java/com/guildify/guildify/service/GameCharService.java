@@ -9,6 +9,7 @@ import com.guildify.guildify.repository.GameCharRepository;
 import com.guildify.guildify.repository.GameRepository;
 import com.guildify.guildify.repository.GuildRepository;
 import com.guildify.guildify.repository.UserRepository;
+import com.guildify.guildify.utility.StaticMethods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,11 +46,14 @@ public class GameCharService {
         if (gameCharRequest.getCharName().length() < 1 || isNumeric(gameCharRequest.getCharName())) {
             throw new IllegalArgumentException("The Character name cannot be only numeric or lesser than 1 characters");
         }
-        if(jwtUserEntityExtractor(jwt)!=userRepository.findUserEntityByUsername(gameCharRequest.getUserDisplayName())){
+        if(jwtUserEntityExtractor(jwt)!=userRepository.findUserEntityByDisplayName(gameCharRequest.getUserDisplayName())){
             throw new IllegalArgumentException("You cannot create a character for another user.");
         }
         if(gameRepository.findGameEntityByGameName(gameCharRequest.getGameName())==null){
             throw new IllegalArgumentException("You cannot create a character for a game that does not exist.");
+        }
+        if(!StaticMethods.isNumeric(gameCharRequest.getCharLevel())){
+            throw new IllegalArgumentException("Level must be in numeric.");
         }
         // DTO to Entity mapper
         GameCharEntity gameCharEntity = GameCharEntity.builder()

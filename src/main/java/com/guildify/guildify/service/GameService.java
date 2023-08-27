@@ -117,7 +117,7 @@ public class GameService {
                 .gameChars(null)
                 .build();
         gameResponse.setCreatedAt(LocalDateTime.now());
-        gameResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getUsername());
+        gameResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
         if(game.getGameCharEntityList()!=null){
             List<GameCharResponse> gameCharResponseList = new ArrayList<>();
             for(GameCharEntity x:  game.getGameCharEntityList()){
@@ -125,10 +125,19 @@ public class GameService {
                         .charId(x.getCharId())
                         .charName(x.getCharName())
                         .charLevel(x.getCharLevel())
-                        .charOwner(x.getUserEntity().getDisplayName())
-                        .charGameName(x.getGameEntity().getGameName())
-                        .charGuildName(x.getGuildEntity().getGuildName())
+                        .charOwner(null)
+                        .charGameName(null)
+                        .charGuildName(null)
                         .build();
+                if(x.getUserEntity()!=null){
+                    gameCharResponse.setCharOwner(x.getUserEntity().getDisplayName());
+                }
+                if(x.getGameEntity()!=null){
+                    gameCharResponse.setCharGameName(x.getGameEntity().getGameName());
+                }
+                if(x.getGuildEntity()!=null){
+                    gameCharResponse.setCharGuildName(x.getGuildEntity().getGuildName());
+                }
                 gameCharResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
                 gameCharResponse.setCreatedAt(LocalDateTime.now());
                 gameCharResponseList.add(gameCharResponse);
