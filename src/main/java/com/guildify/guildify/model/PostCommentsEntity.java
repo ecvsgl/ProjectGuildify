@@ -21,11 +21,9 @@ public class PostCommentsEntity extends BaseEntity{
     private String commentContent;
 
     @ManyToOne
-    @Column(nullable = false)
     private UserEntity userEntity;
 
     @ManyToOne
-    @Column(nullable = false)
     private PostEntity postEntity;
 
     @Override

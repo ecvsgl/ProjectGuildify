@@ -76,8 +76,12 @@ public class PostService {
         PostResponse postResponse = PostResponse.builder()
                 .postId(postEntity.getPostId())
                 .postContent(postEntity.getPostContent())
-                .postOwnerDisplayName(postEntity.getUserEntity().getDisplayName())
+                .postOwnerDisplayName(null)
+                .postCommentsList(null)
                 .build();
+        if(postEntity.getUserEntity()!=null){
+            postResponse.setPostOwnerDisplayName(postEntity.getUserEntity().getDisplayName());
+        }
         if (postEntity.getPostCommentsEntityList() != null) {
             List<PostCommentResponse> postComments = new ArrayList<>();
             for(PostCommentsEntity x : postEntity.getPostCommentsEntityList()){
@@ -92,8 +96,6 @@ public class PostService {
                 postComments.add(postCommentResponse);
             }
             postResponse.setPostCommentsList(postComments);
-        } else {
-            postResponse.setPostCommentsList(null);
         }
         postResponse.setCreatedAt(LocalDateTime.now());
         postResponse.setCreatedBy(jwtUserEntityExtractor(jwt).getDisplayName());
