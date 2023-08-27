@@ -22,6 +22,11 @@ public class GameCharController {
         return gameCharService.addNewGameChar(StaticMethods.getJwtFromRequestHeader(bearerToken), gameChar);
     }
 
+    @GetMapping("/user/gamechars")
+    public List<GameCharResponse> getMyAllGameChars(@RequestHeader("Authorization") String bearerToken) {
+        return gameCharService.getMyAllGameChars(StaticMethods.getJwtFromRequestHeader(bearerToken));
+    }
+
     @GetMapping("/admin/gamechars")
     public List<GameCharResponse> getAllGameChars(@RequestHeader("Authorization") String bearerToken) {
         log.info("Game chars has been searched");
