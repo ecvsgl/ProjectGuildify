@@ -64,6 +64,15 @@ public class GameCharService {
         return gameCharEntityToResponseMapper(jwt,gameCharEntity);
     }
 
+    public List<GameCharResponse> getMyAllGameChars(String jwt){
+        List<GameCharEntity> myChars = jwtUserEntityExtractor(jwt).getGameCharEntityList();
+        List<GameCharResponse> myAllGameChars = new ArrayList<>();
+        for(GameCharEntity x: myChars){
+            myAllGameChars.add(gameCharEntityToResponseMapper(jwt,x));
+        }
+        return myAllGameChars;
+    }
+
     public GameCharResponse updateGameChar(String jwt, int charId, String newCharName) {
         GameCharEntity foundCharacter = gameCharRepository.findGameCharEntityByCharId(charId);
         if(foundCharacter==null){

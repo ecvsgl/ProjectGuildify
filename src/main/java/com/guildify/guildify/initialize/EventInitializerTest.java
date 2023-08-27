@@ -294,7 +294,43 @@ public class EventInitializerTest implements CommandLineRunner {
             char5.setCreatedBy("System");
             char5.setTimestamp(LocalDateTime.now());
 
-            gameCharRepository.saveAll(List.of(char1, char2, char3, char4, char5));
+            GameCharEntity char6 = new GameCharEntity();
+            char6.setCharName("Nuacth");
+            char6.setCharLevel("99");
+            char6.setUserEntity(user5);
+            char6.setGameEntity(game3);
+            char6.setGuildEntity(null);
+            char6.setCreatedBy("System");
+            char6.setTimestamp(LocalDateTime.now());
+
+            GameCharEntity char7 = new GameCharEntity();
+            char7.setCharName("Nuavie");
+            char7.setCharLevel("30");
+            char7.setUserEntity(user5);
+            char7.setGameEntity(game1);
+            char7.setGuildEntity(guild1);
+            char7.setCreatedBy("System");
+            char7.setTimestamp(LocalDateTime.now());
+
+            GameCharEntity char8 = new GameCharEntity();
+            char8.setCharName("Azorlax");
+            char8.setCharLevel("30");
+            char8.setUserEntity(user5);
+            char8.setGameEntity(game2);
+            char8.setGuildEntity(guild2);
+            char8.setCreatedBy("System");
+            char8.setTimestamp(LocalDateTime.now());
+
+            GameCharEntity char9 = new GameCharEntity();
+            char9.setCharName("NoobieTrickyshot");
+            char9.setCharLevel("3");
+            char9.setUserEntity(user5);
+            char9.setGameEntity(game1);
+            char9.setGuildEntity(guild1);
+            char9.setCreatedBy("System");
+            char9.setTimestamp(LocalDateTime.now());
+
+            gameCharRepository.saveAll(List.of(char1, char2, char3, char4, char5, char6, char7, char8, char9));
         }
     }
 }
