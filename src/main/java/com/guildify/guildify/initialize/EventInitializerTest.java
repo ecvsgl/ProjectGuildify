@@ -40,21 +40,26 @@ public class EventInitializerTest implements CommandLineRunner {
                 gameCharRepository.count()==0 &&
                 roleRepository.count()==0) {
             //CalendarEvent Persistance...
-            CalendarEventEntity event1 = new CalendarEventEntity(1,"EventDeneme1"
-                    ,LocalDateTime.of(2023, 7, 24, 12, 30));
-            CalendarEventEntity event2 = new CalendarEventEntity(2,"EventDeneme2"
-                    ,LocalDateTime.of(2023, 7, 25, 12, 30));
-            CalendarEventEntity event3 = new CalendarEventEntity(3,"EventDeneme3"
-                    ,LocalDateTime.of(2023, 7, 26, 12, 30));
+            CalendarEventEntity event1 = new CalendarEventEntity(1,"Star Wars: Ahsoka Release"
+                    ,LocalDateTime.of(2023, 8, 22, 12, 30));
+            CalendarEventEntity event2 = new CalendarEventEntity(2,"The Game Awards"
+                    ,LocalDateTime.of(2023, 12, 01, 12, 30));
+            CalendarEventEntity event3 = new CalendarEventEntity(3,"PAX Expo"
+                    ,LocalDateTime.of(2023, 9, 21, 12, 30));
+            CalendarEventEntity event4 = new CalendarEventEntity(3,"Nintendo Live Event"
+                    ,LocalDateTime.of(2023, 9, 01, 12, 30));
             event1.setCreatedBy("System");
             event1.setTimestamp(LocalDateTime.now());
             event2.setCreatedBy("System");
             event2.setTimestamp(LocalDateTime.now());
             event3.setCreatedBy("System");
             event3.setTimestamp(LocalDateTime.now());
+            event4.setCreatedBy("System");
+            event4.setTimestamp(LocalDateTime.now());
             calendarEventRepository.save(event1);
             calendarEventRepository.save(event2);
             calendarEventRepository.save(event3);
+            calendarEventRepository.save(event4);
 
             //RolePersistance
             Role standardRole = new Role();
