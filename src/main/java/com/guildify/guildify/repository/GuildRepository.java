@@ -9,4 +9,6 @@ public interface GuildRepository extends JpaRepository<GuildEntity, Integer> {
 
     GuildEntity findGuildEntityByGuildName(String s);
     GuildEntity findGuildEntityByGuildId(int guildId);
+
+    GuildEntity findGuildEntityByGuildLeaderUserEntity_DisplayName(String s);
 }

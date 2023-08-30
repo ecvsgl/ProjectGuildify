@@ -60,6 +60,9 @@ public class GuildService {
         if(gameRepository.findGameEntityByGameName(guildRequest.getGameName())==null){
             throw new IllegalArgumentException("A guild must be related to a game.");
         }
+        if(guildRepository.findGuildEntityByGuildLeaderUserEntity_DisplayName(guildRequest.getGuildLeaderUserDisplayName())!=null){
+            throw new IllegalArgumentException("A person can lead only one guild.");
+        }
         // DTO to Entity mapper
         GuildEntity guildEntity = GuildEntity.builder()
                 .guildName(guildRequest.getGuildName())
